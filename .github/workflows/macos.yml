@@ -1,0 +1,36 @@
+name: Build MacOS
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    name: Service Deploy
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+
+    - name: Clone Repo
+      uses: actions/checkout@v3
+
+    - name: OS Packages
+      run: |
+        brew install cmake git capstone python3
+
+    - name: Build Keystone
+      run: |
+        git clone https://github.com/EgeBalci/keystone
+        mkdir keystone/build
+        cd keystone/build
+        ../make-lib.sh
+        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;X86" -G "Unix Makefiles" ..
+        make -j8
+        sudo make install
+        sudo ldconfig
+
+    - name: Build SGN
+      run: go build -o sgn -ldflags '-w -s -extldflags -static' -trimpath main.go
+
