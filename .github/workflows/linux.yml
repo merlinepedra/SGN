@@ -19,7 +19,7 @@ jobs:
     - name: OS Packages
       run: |
         sudo apt-get update
-        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time
+        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time mingw-w64
 
     - name: Build Keystone
       run: |
@@ -34,4 +34,5 @@ jobs:
 
     - name: Build SGN
       run: |
-        make linux_amd64
+        GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
+        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L`pwd`/build/lib/" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn.exe
