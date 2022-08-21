@@ -55,21 +55,18 @@ jobs:
     - name: OS Packages
       run: |
         sudo apt-get update
-        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time mingw-w64 mingw-w64-tools
+        sudo apt-get -y install wget unzip build-essential cmake git libcapstone-dev python3 time mingw-w64 mingw-w64-tools
 
     - name: Build Keystone
       run: |
-        git clone https://github.com/EgeBalci/keystone
-        mkdir keystone/build
-        cd keystone/build
-        ../make-lib.sh
+        wget https://github.com/keystone-engine/keystone/releases/download/0.9.2/keystone-0.9.2-win64.zip
+        unzip keystone-0.9.2-win64.zip
+        cd keystone-0.9.2-win64
         gendef keystone.dll
-        ls -alh
         x86_64-w64-mingw32-dlltool --as-flags=--64 -m i386:x86-64 -k --output-lib libkeystone.a --input-def keystone.def
 
     - name: Build SGN Windows
       run: |
-        ls -lah ./keystone/build/lib/
         GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L./keystone/build/lib/" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn_windows-amd64.exe
 
     - name: Windows Artifacts
