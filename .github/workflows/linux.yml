@@ -33,6 +33,6 @@ jobs:
         sudo ldconfig
 
     - name: Build SGN
-      run: go build -o sgn -ldflags '-w -s -extldflags -static' -trimpath main.go
-
-
+      run: |
+        go build -o sgn -ldflags '-w -s -extldflags -static' -trimpath main.go
+        ./sgn -h

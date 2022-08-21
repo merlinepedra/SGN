@@ -31,5 +31,6 @@ jobs:
         sudo make install
 
     - name: Build SGN
-      run: go build -o sgn -ldflags '-w -s -extldflags -static' -trimpath main.go
-
+      run: |
+        go build -o sgn -ldflags '-w -s' -trimpath main.go
+        ./sgn -h
