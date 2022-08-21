@@ -3,8 +3,6 @@ FROM golang:1.15-buster as builder
 RUN apt-get update && apt-get -y install \
     build-essential \    
     cmake \
-    g++-multilib \
-    gcc-multilib \
     git \
     libcapstone-dev \
     python3 \
