@@ -29,8 +29,9 @@ jobs:
         ../make-lib.sh
         cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;X86" -G "Unix Makefiles" ..
         make -j8
-        sudo "make install && ldconfig"
-    
+        sudo make install
+        sudo ldconfig
+
     - name: Build SGN
       run: go build -o sgn -ldflags '-w -s -extldflags -static' -trimpath main.go
 
