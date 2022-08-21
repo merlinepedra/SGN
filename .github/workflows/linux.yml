@@ -6,8 +6,8 @@ on:
 
 jobs:
 
-  build:
-    name: Service Deploy
+  build-linux:
+    name: Build Linux
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -19,7 +19,7 @@ jobs:
     - name: OS Packages
       run: |
         sudo apt-get update
-        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time mingw-w64
+        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time
 
     - name: Build Keystone
       run: |
@@ -32,7 +32,14 @@ jobs:
         sudo make install
         sudo ldconfig
 
-    - name: Build SGN
+    - name: Build SGN Linux
       run: |
         GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
-        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L`pwd`/build/lib/" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn.exe
+
+    - name: Test SGN
+      run: |
+        ./sgn_linux-amd64 -h
+
+    - name: Build SGN Windows
+      run: |
+        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L`pwd`keystone/build/lib/" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn_windows-amd64.exe

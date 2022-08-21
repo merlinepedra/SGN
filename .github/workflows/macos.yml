@@ -7,7 +7,7 @@ on:
 jobs:
 
   build:
-    name: Service Deploy
+    name: Bulid MacOS
     runs-on: macos-latest
     timeout-minutes: 45
 
@@ -30,12 +30,15 @@ jobs:
         make -j8
         sudo make install
 
-    - name: Build SGN
+    - name: Build SGN AMD64
       run: |
         ls -lah /usr/lib/
         ls -lah /usr/local/lib/
-        GOOS=darwin CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn-amd64
-        GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn-arm64
+        GOOS=darwin CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn_macos-amd64
 
     - name: Test SGN
       run: ./sgn-amd64 -h
+
+    - name: Build SGN ARM64
+      run: |    
+        GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn_macos-arm64
