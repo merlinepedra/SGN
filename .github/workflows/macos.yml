@@ -33,6 +33,7 @@ jobs:
     - name: Build SGN
       run: |
         ls -lah /usr/lib/
+        ls -lah /usr/local/lib/
         GOOS=darwin CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn-amd64
         GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn-arm64
 
