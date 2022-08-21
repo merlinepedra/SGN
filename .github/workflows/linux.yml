@@ -64,10 +64,11 @@ jobs:
         cd keystone-0.9.2-win64
         gendef keystone.dll
         x86_64-w64-mingw32-dlltool --as-flags=--64 -m i386:x86-64 -k --output-lib libkeystone.a --input-def keystone.def
+        ls -alh
 
     - name: Build SGN Windows
       run: |
-        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L./keystone/build/lib/" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn_windows-amd64.exe
+        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L./keystone-0.9.2-win64/build/lib/" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn_windows-amd64.exe
 
     - name: Windows Artifacts
       uses: actions/upload-artifact@v2
