@@ -19,6 +19,7 @@
 
 .idea
 .vscode/
+/keystone
 
 # Builds
 build/

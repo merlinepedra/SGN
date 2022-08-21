@@ -32,4 +32,8 @@ jobs:
 
     - name: Build SGN
       run: |
-        make darwin
+        GOOS=darwin CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn-amd64
+        GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn-arm64
+
+    - name: Test SGN
+      run: ./sgn-amd64 -h
