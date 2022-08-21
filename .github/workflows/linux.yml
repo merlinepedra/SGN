@@ -42,7 +42,7 @@ jobs:
         name: linux-amd64
         path:  ./sgn_linux-amd64
 
- build-windows:
+  build-windows:
     name: Build Windows AMD64
     runs-on: ubuntu-latest
     timeout-minutes: 45
