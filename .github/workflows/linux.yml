@@ -18,13 +18,13 @@ jobs:
 
     - name: OS Packages
       run: |
-      sudo apt-get update && apt-get -y install \
-        build-essential \    
-        cmake \
-        git \
-        libcapstone-dev \
-        python3 \
-        time
+        sudo apt-get update && apt-get -y install \
+          build-essential \    
+          cmake \
+          git \
+          libcapstone-dev \
+          python3 \
+          time
 
     - name: Build Keystone
       run: |
