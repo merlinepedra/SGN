@@ -16,6 +16,11 @@ jobs:
     - name: Clone Repo
       uses: actions/checkout@v3
 
+    - name: Go 1.18
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.18.5'
+
     - name: OS Packages
       run: |
         sudo apt-get update
@@ -52,6 +57,11 @@ jobs:
     - name: Clone Repo
       uses: actions/checkout@v3
 
+    - name: Go 1.18
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.18.5'
+
     - name: OS Packages
       run: |
         sudo apt-get update
@@ -68,7 +78,7 @@ jobs:
 
     - name: Build SGN Windows
       run: |
-        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L./keystone-0.9.2-win64" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn_windows-amd64.exe
+        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L./keystone-0.9.2-win64" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags "-linkmode external -extldflags -static" -trimpath -o sgn_windows-amd64.exe
 
     - name: Windows Artifacts
       uses: actions/upload-artifact@v2

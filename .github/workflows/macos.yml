@@ -7,7 +7,7 @@ on:
 jobs:
 
   build:
-    name: Bulid MacOS
+    name: Build MacOS
     runs-on: macos-latest
     timeout-minutes: 45
 
@@ -15,6 +15,11 @@ jobs:
 
     - name: Clone Repo
       uses: actions/checkout@v3
+
+    - name: Go 1.18
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.18.5'
 
     - name: OS Packages
       run: |
