@@ -1,4 +1,4 @@
-name: Build Linux AMD64
+name: Build Linux/Windows
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 jobs:
 
   build-linux:
-    name: Build Linux
+    name: Build Linux AMD64
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -19,7 +19,7 @@ jobs:
     - name: OS Packages
       run: |
         sudo apt-get update
-        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time mingw-w64 mingw-w64-tools
+        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time
 
     - name: Build Keystone
       run: |
@@ -42,9 +42,34 @@ jobs:
         name: linux-amd64
         path:  ./sgn_linux-amd64
 
+ build-windows:
+    name: Build Windows AMD64
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+
+    - name: Clone Repo
+      uses: actions/checkout@v3
+
+    - name: OS Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time mingw-w64 mingw-w64-tools
+
+    - name: Build Keystone
+      run: |
+        git clone https://github.com/EgeBalci/keystone
+        mkdir keystone/build
+        cd keystone/build
+        ../make-lib.sh
+        gendef keystone.dll
+        x86_64-w64-mingw32-dlltool --as-flags=--64 -m i386:x86-64 -k --output-lib libkeystone.a --input-def keystone.def
+
     - name: Build SGN Windows
       run: |
-        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L`pwd`keystone/build/lib/" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn_windows-amd64.exe
+        ls -lah ./keystone/build/lib/
+        GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L./keystone/build/lib/" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn_windows-amd64.exe
 
     - name: Windows Artifacts
       uses: actions/upload-artifact@v2
