@@ -36,10 +36,18 @@ jobs:
       run: |
         GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
 
-    - name: Test SGN
-      run: |
-        ./sgn_linux-amd64 -h
+    - name: Linux Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-amd64
+        path:  ./sgn_linux-amd64
 
     - name: Build SGN Windows
       run: |
         GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L`pwd`keystone/build/lib/" CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -trimpath -o sgn_windows-amd64.exe
+
+    - name: Windows Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-amd64
+        path:  ./sgn_windows-amd64.exe
