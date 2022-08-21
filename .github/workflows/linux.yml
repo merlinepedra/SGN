@@ -34,5 +34,4 @@ jobs:
 
     - name: Build SGN
       run: |
-        go build -o sgn -ldflags '-w -s -extldflags -static' -trimpath main.go
-        ./sgn -h
+        make linux_amd64
