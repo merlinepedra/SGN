@@ -66,8 +66,8 @@ jobs:
             --volume "${PWD}/artifacts:/artifacts"
           install: |
             apt-get update
-            apt-get -y install build-essential cmake git libcapstone-dev python3 time
-            
+            apt-get -y install wget tar build-essential cmake git libcapstone-dev python3 time
+
             mkdir -p /opt/go
             cd /opt/go
             wget -c https://golang.org/dl/go1.18.5.linux-arm64.tar.gz
