@@ -39,7 +39,7 @@ jobs:
 
     - name: Build SGN Linux (AMD64)
       run: |
-        GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
+        GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -ldflags="-s -w -extldflags=-static" -trimpath -o sgn_linux-amd64
 
     - name: Linux Artifacts (AMD64)
       uses: actions/upload-artifact@v2
@@ -67,7 +67,15 @@ jobs:
           install: |
             apt-get update
             apt-get -y install build-essential cmake git libcapstone-dev python3 time
-            curl -LO https://get.golang.org/$(uname)/go_installer && chmod +x go_installer && ./go_installer && rm go_installer
+            
+            mkdir -p /opt/go
+            cd /opt/go
+            wget -c https://golang.org/dl/go1.18.5.linux-arm64.tar.gz
+            tar -C /opt/go -xzf go1.18.5.linux-arm64.tar.gz
+            rm -f go1.18.5.linux-arm64.tar.gz
+            export PATH=$PATH:/opt/go/go/bin
+            go version
+
             git clone https://github.com/EgeBalci/keystone
             mkdir keystone/build
             cd keystone/build
@@ -77,7 +85,7 @@ jobs:
             make install
             ldconfig
           run: |
-            GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w" -trimpath -o sgn_linux-arm64
+            GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w -extldflags=-static" -trimpath -o /artifacts/sgn_linux-arm64
 
       - name: Linux Artifacts (ARM64)
         uses: actions/upload-artifact@v2
