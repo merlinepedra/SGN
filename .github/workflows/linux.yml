@@ -6,8 +6,49 @@ on:
 
 jobs:
 
-  build-linux:
-    name: Build Linux
+  build-linux-amd64:
+    name: Build Linux amd64
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+
+    - name: Clone Repo
+      uses: actions/checkout@v3
+
+    - name: Go 1.18
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.18.5'
+
+    - name: OS Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time
+
+    - name: Build Keystone
+      run: |
+        git clone https://github.com/EgeBalci/keystone
+        mkdir keystone/build
+        cd keystone/build
+        ../make-lib.sh
+        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="X86" -G "Unix Makefiles" ..
+        make -j8
+        sudo make install
+        sudo ldconfig
+
+    - name: Build SGN Linux (AMD64)
+      run: |
+        GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
+
+    - name: Linux Artifacts (AMD64)
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-amd64
+        path: ./sgn_linux-amd64
+
+  build-linux-arm64:
+    name: Build Linux ARM64
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -32,20 +73,10 @@ jobs:
         mkdir keystone/build
         cd keystone/build
         ../make-lib.sh
-        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;x86_64" -G "Unix Makefiles" ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64" -G "Unix Makefiles" ..
         make -j8
         sudo make install
         sudo ldconfig
-
-    - name: Build SGN Linux (AMD64)
-      run: |
-        GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
-
-    - name: Linux Artifacts (AMD64)
-      uses: actions/upload-artifact@v2
-      with:
-        name: linux-amd64
-        path: ./sgn_linux-amd64
 
     - name: Build SGN Linux (ARM64)
       run: |
