@@ -7,7 +7,7 @@ on:
 jobs:
 
   build-linux:
-    name: Build Linux AMD64
+    name: Build Linux
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -31,13 +31,13 @@ jobs:
         git clone https://github.com/EgeBalci/keystone
         mkdir keystone/build
         cd keystone/build
-        ../make-lib.sh
+        ../make-lib.sh macos-universal
         cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;X86" -G "Unix Makefiles" ..
         make -j8
         sudo make install
         sudo ldconfig
 
-    - name: Build SGN Linux
+    - name: Build SGN Linux (AMD64)
       run: |
         GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
 
@@ -46,6 +46,11 @@ jobs:
       with:
         name: linux-amd64
         path:  ./sgn_linux-amd64
+
+    - name: Build SGN Linux (ARM64)
+      run: |
+        GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
+
 
   build-windows:
     name: Build Windows AMD64
