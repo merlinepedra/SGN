@@ -50,7 +50,7 @@ jobs:
   build-linux-arm64:
     name: Build Linux ARM64
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
 
     steps:
       - name: Clone Repo
