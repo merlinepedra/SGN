@@ -65,17 +65,17 @@ jobs:
           dockerRunArgs: |
             --volume "${PWD}/artifacts:/artifacts"
           install: |
-            sudo apt-get update
-            sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time
-            curl -LO https://get.golang.org/$(uname)/go_installer && chmod +x go_installer && sudo ./go_installer && rm go_installer
+            apt-get update
+            apt-get -y install build-essential cmake git libcapstone-dev python3 time
+            curl -LO https://get.golang.org/$(uname)/go_installer && chmod +x go_installer && ./go_installer && rm go_installer
             git clone https://github.com/EgeBalci/keystone
             mkdir keystone/build
             cd keystone/build
             ../make-lib.sh
             cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;X86" -G "Unix Makefiles" ..
             make -j8
-            sudo make install
-            sudo ldconfig
+            make install
+            ldconfig
           run: |
             GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w" -trimpath -o sgn_linux-arm64
 
