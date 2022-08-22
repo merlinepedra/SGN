@@ -7,4 +7,5 @@ require (
 	github.com/briandowns/spinner v1.11.1
 	github.com/fatih/color v1.10.0
 	github.com/olekukonko/tablewriter v0.0.4
+	golang.org/x/sys v0.0.0-20220818161305-2296e01440c6 // indirect
 )
