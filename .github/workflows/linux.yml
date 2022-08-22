@@ -63,7 +63,7 @@ jobs:
           arch: aarch64
           distro: ubuntu22.04
           dockerRunArgs: |
-            --volume "${PWD}/artifacts:/artifacts"
+            --volume "${PWD}:/workdir"
           install: |
             apt-get update
             apt-get -y install wget tar build-essential cmake git libcapstone-dev python3 time
@@ -87,7 +87,9 @@ jobs:
             ldconfig
           run: |
             export PATH=$PATH:/opt/go/go/bin
-            GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w -extldflags=-static" -trimpath -o /artifacts/sgn_linux-arm64
+            cd /workdir
+            ls -alh
+            GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w -extldflags=-static" -trimpath -o sgn_linux-arm64
 
       - name: Linux Artifacts (ARM64)
         uses: actions/upload-artifact@v2
