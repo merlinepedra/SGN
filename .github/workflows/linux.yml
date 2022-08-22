@@ -73,7 +73,7 @@ jobs:
         mkdir keystone/build
         cd keystone/build
         ../make-lib.sh
-        cmake -DCC=aarch64-linux-gnu-gcc -DCXX=g++-aarch64-linux-gnu  -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64" -G "Unix Makefiles" ..
+        CC=aarch64-linux-gnu-gcc CXX=g++-aarch64-linux-gnu cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64" -G "Unix Makefiles" ..
         make -j8
         sudo make install
         sudo ldconfig
