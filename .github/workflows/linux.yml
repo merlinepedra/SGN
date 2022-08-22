@@ -41,16 +41,17 @@ jobs:
       run: |
         GOOS=linux CGO_ENABLED=1 GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
 
-    - name: Linux Artifacts
+    - name: Linux Artifacts (AMD64)
       uses: actions/upload-artifact@v2
       with:
         name: linux-amd64
-        path:  ./sgn_linux-amd64
+        path: ./sgn_linux-amd64
 
     - name: Build SGN Linux (ARM64)
       run: |
         GOOS=linux GOARCH=arm64 CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc go build -ldflags="-s -w" -trimpath -o sgn_linux-arm64
 
+    - name: Linux Artifacts (ARM64)
       uses: actions/upload-artifact@v2
       with:
         name: linux-arm64
