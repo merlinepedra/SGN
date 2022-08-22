@@ -57,33 +57,29 @@ jobs:
     - name: Clone Repo
       uses: actions/checkout@v3
 
-    - name: Go 1.18
-      uses: actions/setup-go@v2
+    - uses: uraimo/run-on-arch-action@v2
+      name: Run Commands
+      id: runcmd
+      githubToken: ${{ github.token }}
       with:
-        go-version: '1.18.5'
-
-    - name: OS Packages
-      run: |
+        arch: aarch64
+        distro: ubuntu22.04
+      dockerRunArgs: |
+        --volume "${PWD}/artifacts:/artifacts"
+      install: |
         sudo apt-get update
-        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
-
-    - name: Build Keystone
-      run: |
+        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time
+        curl -LO https://get.golang.org/$(uname)/go_installer && chmod +x go_installer && sudo ./go_installer && rm go_installer
         git clone https://github.com/EgeBalci/keystone
         mkdir keystone/build
         cd keystone/build
         ../make-lib.sh
-        CC=aarch64-linux-gnu-gcc CXX=g++-aarch64-linux-gnu cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64" -G "Unix Makefiles" ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;X86" -G "Unix Makefiles" ..
         make -j8
         sudo make install
         sudo ldconfig
-
-    - name: Find
-      run: find /usr -name keystone*
-
-    - name: Build SGN Linux (ARM64)
       run: |
-        GOOS=linux GOARCH=arm64 CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc CXX=g++-aarch64-linux-gnu go build -ldflags="-s -w" -trimpath -o sgn_linux-arm64
+        GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w" -trimpath -o sgn_linux-arm64
 
     - name: Linux Artifacts (ARM64)
       uses: actions/upload-artifact@v2
