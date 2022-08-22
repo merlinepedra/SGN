@@ -89,8 +89,7 @@ jobs:
             export PATH=$PATH:/opt/go/go/bin
             cd /workdir
             ls -alh
-            git config --global --add safe.directory .
-            GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w -extldflags=-static" -trimpath -o sgn_linux-arm64
+            GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -buildvcs=false -ldflags="-s -w -extldflags=-static" -trimpath -o sgn_linux-arm64
 
       - name: Linux Artifacts (ARM64)
         uses: actions/upload-artifact@v2
