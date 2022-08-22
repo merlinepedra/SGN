@@ -24,7 +24,7 @@ jobs:
     - name: OS Packages
       run: |
         sudo apt-get update
-        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time
+        sudo apt-get -y install build-essential cmake git libcapstone-dev python3 time gcc-aarch64-linux-gnu
 
     - name: Build Keystone
       run: |
@@ -49,8 +49,12 @@ jobs:
 
     - name: Build SGN Linux (ARM64)
       run: |
-        GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w" -trimpath -o sgn_linux-amd64
+        GOOS=linux GOARCH=arm64 CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc go build -ldflags="-s -w" -trimpath -o sgn_linux-arm64
 
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-arm64
+        path:  ./sgn_linux-arm64
 
   build-windows:
     name: Build Windows AMD64
