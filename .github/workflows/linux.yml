@@ -84,4 +84,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: windows-amd64
-        path:  ./sgn_windows-amd64.exe
+        path:  |
+          ./keystone-0.9.2-win64/keystone.dll
+          ./sgn_windows-amd64.exe
