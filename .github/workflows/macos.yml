@@ -30,14 +30,14 @@ jobs:
         git clone https://github.com/EgeBalci/keystone
         mkdir keystone/build
         cd keystone/build
-        ../make-lib.sh macos-universal
-        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;x86_64" -G "Unix Makefiles" ..
+        ../make-lib.sh
+        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_OSX_ARCHITECTURES="AArch64;x86_64" -DLLVM_TARGETS_TO_BUILD="all" -G "Unix Makefiles" ..
         make -j8
         sudo make install
 
     - name: Build SGN AMD64
       run: |
-        GOOS=darwin CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn_macos-amd64
+        GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-lkeystone -L/usr/lib/" go build -ldflags="-s -w" -trimpath -o sgn_macos-amd64
 
     - name: MacOS Artifacts (AMD64)
       uses: actions/upload-artifact@v2
