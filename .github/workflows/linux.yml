@@ -76,6 +76,7 @@ jobs:
             export PATH=$PATH:/opt/go/go/bin
             go version
 
+            cd ~
             git clone https://github.com/EgeBalci/keystone
             mkdir keystone/build
             cd keystone/build
@@ -85,13 +86,14 @@ jobs:
             make install
             ldconfig
           run: |
+            export PATH=$PATH:/opt/go/go/bin
             GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -ldflags="-s -w -extldflags=-static" -trimpath -o /artifacts/sgn_linux-arm64
 
       - name: Linux Artifacts (ARM64)
         uses: actions/upload-artifact@v2
         with:
           name: linux-arm64
-          path:  ./sgn_linux-arm64
+          path:  ./artifacts/sgn_linux-arm64
 
   build-windows:
     name: Build Windows AMD64
