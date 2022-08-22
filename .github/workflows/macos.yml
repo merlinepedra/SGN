@@ -31,7 +31,7 @@ jobs:
         mkdir keystone/build
         cd keystone/build
         ../make-lib.sh macos-universal
-        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;x64" -G "Unix Makefiles" ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;x86_64" -G "Unix Makefiles" ..
         make -j8
         sudo make install
 
