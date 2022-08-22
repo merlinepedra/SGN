@@ -78,6 +78,9 @@ jobs:
         sudo make install
         sudo ldconfig
 
+    - name: Find
+      run: find /usr -name keystone*
+
     - name: Build SGN Linux (ARM64)
       run: |
         GOOS=linux GOARCH=arm64 CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc CXX=g++-aarch64-linux-gnu go build -ldflags="-s -w" -trimpath -o sgn_linux-arm64
