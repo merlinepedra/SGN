@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/EgeBalci/keystone-go"
+	"github.com/moloch--/keystone-go"
 )
 
 // REG structure for registers
