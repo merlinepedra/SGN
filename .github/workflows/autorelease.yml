@@ -224,6 +224,11 @@ jobs:
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: true
+        prerelease: false
         files: |
           ./builds/**.zip
+          ./builds/linux-amd64/*.zip
+          ./builds/linux-arm64/*.zip
+          ./builds/macos-amd64/*.zip
+          ./builds/macos-arm64/*.zip
+          ./builds/windows-amd64/*.zip
